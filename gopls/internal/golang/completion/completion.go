@@ -540,6 +540,31 @@ func Completion(ctx context.Context, snapshot *cache.Snapshot, fh file.Handle, p
 			if _, ok := path[1].(*ast.ImportSpec); ok {
 				break
 			}
+			if field, ok := path[1].(*ast.Field); ok {
+				if len(field.Names) == 1 {
+					ans := []CompletionItem{{
+						Label:         "foo",
+						InsertText:    fmt.Sprintf("`json:\"%s\"`", field.Names[0].Name),
+						Kind:          protocol.PropertyCompletion,
+						Depth:         0,
+						Score:         highScore,
+						Documentation: "json tag completion",
+					}}
+
+					start := path[0].Pos()
+					end := path[0].End()
+					sel := &Selection{
+						content: "",
+						cursor:  start,
+						tokFile: pgf.Tok,
+						start:   start,
+						end:     end,
+						mapper:  pgf.Mapper,
+					}
+
+					return ans, sel, nil
+				}
+			}
 		}
 		return nil, nil, nil
 	case *ast.CallExpr:
