@@ -1,0 +1,27 @@
+This test checks the behavior of the 'Replace := with var declaration' code action.
+
+-- flags --
+-ignore_extra_diags
+
+-- go.mod --
+module golang.org/lsptests/replacewithvardecl
+
+go 1.18
+
+-- a.go --
+package replacewithvardecl
+
+import (
+	"fmt"
+)
+
+func foo() {
+	s := "hello" //@codeaction(`:`, "refactor.rewrite.replaceWithVarDeclaration", edit=a1)
+	fmt.Println(s)
+}
+
+-- @a1/a.go --
+@@ -8 +8,2 @@
+-	s := "hello" //@codeaction(`:`, "refactor.rewrite.replaceWithVarDeclaration", edit=a1)
++	var s string
++	s = "hello" //@codeaction(`:`, "refactor.rewrite.replaceWithVarDeclaration", edit=a1)
