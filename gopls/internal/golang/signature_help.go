@@ -117,7 +117,7 @@ loop:
 		// Special handling for error.Error, which is the only builtin method.
 		if obj.Name() == "Error" {
 			return &protocol.SignatureInformation{
-				Label: "Error() string",
+				Label: "func Error() string",
 				// TODO(skewb1k): move the docstring for error.Error to builtin.go and reuse it across all relevant LSP methods.
 				Documentation:   stringToSigInfoDocumentation("Error returns the error message.", snapshot.Options()),
 				Parameters:      nil,
@@ -162,7 +162,7 @@ func signatureInformation(sig *signature, options *settings.Options, pos token.P
 		paramInfo = append(paramInfo, protocol.ParameterInformation{Label: p})
 	}
 	return &protocol.SignatureInformation{
-		Label:           sig.name + sig.Format(),
+		Label:           "func " + sig.name + sig.Format(),
 		Documentation:   stringToSigInfoDocumentation(sig.doc, options),
 		Parameters:      paramInfo,
 		ActiveParameter: activeParameter(sig, pos, call),
